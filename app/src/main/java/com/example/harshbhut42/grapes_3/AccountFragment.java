@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -49,6 +50,7 @@ public class AccountFragment extends Fragment {
     private TextView mUserName;
     private Button mChangeProfile;
 
+    private String uid = null;
     //Firebase
     private DatabaseReference database;
     private FirebaseUser mCurrentUser;
@@ -76,7 +78,7 @@ public class AccountFragment extends Fragment {
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = mCurrentUser.getUid();
+        uid = mCurrentUser.getUid();
 
         database = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
 
@@ -88,6 +90,7 @@ public class AccountFragment extends Fragment {
                 String profilePic = dataSnapshot.child("image").getValue().toString();
 
                 mUserName.setText(userName);
+                Picasso.get().load(profilePic).into(mProfilePic);
 
             }
 
@@ -118,6 +121,7 @@ public class AccountFragment extends Fragment {
         return mView;
     }
 
+    // for crop image and store in firebase
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -132,23 +136,29 @@ public class AccountFragment extends Fragment {
 
         }
 
-        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {    // called after image is croped
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK)
             {
 
-                Uri resultUri = result.getUri();
+                final Uri resultUri = result.getUri();
 
-                StorageReference imageFile = mImageStorage.child("profile_image").child(random() + ".jpg");
+                StorageReference imageFile = mImageStorage.child("profile_image").child(uid + ".jpg");
 
+                //set uri of image
                 imageFile.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                         if(task.isSuccessful())
                         {
-                            Toast.makeText(getContext(),"Working",Toast.LENGTH_SHORT).show();
+                            String ImageUrl = task.getResult().getDownloadUrl().toString();  // Download url of image
+
+                            DatabaseReference mImage = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("image");
+                            mImage.setValue(ImageUrl);
+
+                            Picasso.get().load(ImageUrl).into(mProfilePic);
                         }
                         else
                         {
@@ -165,16 +175,4 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    //generate random name of image
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(10);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
 }

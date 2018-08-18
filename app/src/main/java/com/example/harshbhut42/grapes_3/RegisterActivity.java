@@ -76,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else {
                     mRegisterProgress.setTitle("Registering...");
-                    mRegisterProgress.setMessage("Please wait");
+                    mRegisterProgress.setMessage("Please wait...");
                     mRegisterProgress.setCanceledOnTouchOutside(false);
                     mRegisterProgress.show();
 

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,8 @@ public class Users_RecyclerViewAdapter extends RecyclerView.Adapter<Users_Recycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        Glide.with(mContext).asBitmap().load(mProfileImage.get(position)).into(holder.image);
+        Picasso.get().load(mProfileImage.get(position)).into(holder.image);
+       // Glide.with(mContext).asBitmap().load(mProfileImage.get(position)).into(holder.image);
 
         holder.userName.setText(mUserName.get(position));
 
