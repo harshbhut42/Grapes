@@ -1,6 +1,7 @@
 package com.example.harshbhut42.grapes_3;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -68,10 +69,25 @@ public class UsersFragment extends Fragment {
         FirebaseRecyclerAdapter<AllUsers,ViewHolder> Users_RecyclerViewAdapter = new FirebaseRecyclerAdapter<AllUsers, ViewHolder>(AllUsers.class,R.layout.singal_user_layout,ViewHolder.class,mDatabase)
         {
             @Override
-            protected void populateViewHolder(ViewHolder viewHolder, AllUsers model, int position) {
+            protected void populateViewHolder(ViewHolder viewHolder, final AllUsers model, int position) {
 
                 ViewHolder.setUserName(model.getName());
                 ViewHolder.setProfilPic(model.getImage());
+
+                final String Uid = getRef(position).getKey();
+
+                ViewHolder.mView2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getContext(), User_Profile.class);
+                        intent.putExtra("image_url", model.getImage());
+                        intent.putExtra("user_name", model.getName());
+                        intent.putExtra("uid",Uid);
+                        getContext().startActivity(intent);
+
+                    }
+                });
 
             }
         };
@@ -83,10 +99,12 @@ public class UsersFragment extends Fragment {
 
        private static CircleImageView Image;
        private static TextView userName;
+        private static View mView2;
         RelativeLayout parentLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mView2 = itemView;
 
             Image = itemView.findViewById(R.id.user_profil_pic);
             userName = (TextView) itemView.findViewById(R.id.user_name);

@@ -34,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     //Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
+    private DatabaseReference mChatRef;
 
 
     @Override
@@ -101,6 +102,8 @@ public class RegisterActivity extends AppCompatActivity {
                     String uid = currentUser.getUid();
 
                     mRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+                    mChatRef = FirebaseDatabase.getInstance().getReference().child("Chats");
+                    mChatRef.child(uid);
 
                     HashMap<String,String> userMap = new HashMap<>();
 
