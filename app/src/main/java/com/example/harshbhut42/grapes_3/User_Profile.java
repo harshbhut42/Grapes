@@ -27,6 +27,9 @@ public class User_Profile extends AppCompatActivity {
     String Uid ;    // store id of user
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
+    private DatabaseReference mRef1;   //referance for current user in chats
+    private DatabaseReference mRef2;   //referance for second user in chats
+    private DatabaseReference mTemp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,6 @@ public class User_Profile extends AppCompatActivity {
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Chats");
-
 
         final Bundle extra = getIntent().getExtras();
 
@@ -80,8 +82,29 @@ public class User_Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mDatabase.child(mCurrentUser.getUid()).child(Uid).child("message").setValue("");
-                mDatabase.child(Uid).child(mCurrentUser.getUid()).child("message").setValue("");
+
+                mRef1 = mDatabase.child(mCurrentUser.getUid()).child(Uid);
+                mRef2 = mDatabase.child(Uid).child(mCurrentUser.getUid());
+
+                DatabaseReference mNewMessage = mDatabase.child(mCurrentUser.getUid()).child(Uid).push();   // create new child id for store message
+
+
+                String tempId = mNewMessage.getKey();
+
+                mTemp = mRef1.child(tempId).child("message");
+                mTemp.setValue("");
+                //  mTemp = mRef1.child(tempId).child("time");
+                // mTemp.setValue(time);
+                mTemp = mRef1.child(tempId).child("send_by");
+                mTemp.setValue("-1");
+
+
+                mTemp = mRef2.child(tempId).child("message");
+                mTemp.setValue("");
+                //    mTemp = mRef2.child(tempId).child("time");
+                //  mTemp.setValue(time);
+                mTemp = mRef2.child(tempId).child("send_by");
+                mTemp.setValue("-1");
 
                 mAddFriend.setEnabled(false);
             }

@@ -2,15 +2,15 @@ package com.example.harshbhut42.grapes_3;
 
 public class Message {
 
-    public String  message;
-    public String send_by;
-    public long time;
+    public String  message = null;
+    public String send_by = null;
+
 
     public Message(){}
-    public Message(String message, String send_by, long time) {
+    public Message(String message, String send_by) {
         this.message = message;
         this.send_by = send_by;
-        this.time = time;
+
     }
 
     public String getMessage() {
@@ -29,11 +29,5 @@ public class Message {
         this.send_by = send_by;
     }
 
-    public long getTime() {
-        return time;
-    }
 
-    public void setTime(long time) {
-        this.time = time;
-    }
 }

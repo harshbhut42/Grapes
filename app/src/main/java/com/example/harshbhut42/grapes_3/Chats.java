@@ -88,34 +88,27 @@ public class Chats extends AppCompatActivity {
                 String message = mMessage.getText().toString();
 
                 if (!message.equals("")) {
-                    Map<String, String> time = ServerValue.TIMESTAMP;
-                    DatabaseReference mNewMessage = mRef1.push();   // create new child id for store message
 
-                    // HashMap<String,String> messageMap = new HashMap<>();
 
-                    //   messageMap.put("message",message);
-                    // messageMap.put("time",String.valueOf(ServerValue.TIMESTAMP));
 
-                    String tempId = mNewMessage.getKey();
 
-                    Toast.makeText(Chats.this,message,Toast.LENGTH_LONG).show();
+                    String tempId =  mRef1.push().getKey();
+
+                  //  Toast.makeText(Chats.this,message,Toast.LENGTH_LONG).show();
 
                     mTemp = mRef1.child(tempId).child("message");
                     mTemp.setValue(message);
-                    mTemp = mRef1.child(tempId).child("time");
-                    mTemp.setValue(time);
+
                     mTemp = mRef1.child(tempId).child("send_by");
                     mTemp.setValue("0");
 
 
                     mTemp = mRef2.child(tempId).child("message");
                     mTemp.setValue(message);
-                    mTemp = mRef2.child(tempId).child("time");
-                    mTemp.setValue(time);
+
                     mTemp = mRef2.child(tempId).child("send_by");
                     mTemp.setValue("1");
 
-                   // mMessage.setText("");
 
 
                 }
@@ -133,9 +126,12 @@ public class Chats extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
 
-                mList.add(message);
+                if(!message.getSend_by().equals("-1"))
+                {
+                    mList.add(message);
+                    mAdapter.notifyDataSetChanged();
+                }
 
-                mAdapter.notifyDataSetChanged();
 
 
             }

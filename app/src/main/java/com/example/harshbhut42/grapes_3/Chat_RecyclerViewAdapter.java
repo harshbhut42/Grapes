@@ -35,14 +35,18 @@ class Chat_RecyclerViewAdapter extends RecyclerView.Adapter<Chat_RecyclerViewAda
     public void onBindViewHolder(@NonNull Chat_RecyclerViewAdapter.ViewHolder holder, int position) {
 
 
-        Message mMessage = messages.get(position);
-        holder.chat.setText(mMessage.getMessage());
 
-        if(mMessage.getSend_by().equals("0"))
+       holder.chat.setText(messages.get(position).getMessage());
+
+        if(messages.get(position).getSend_by().equals("0"))
         {
             holder.chat.setBackgroundColor(Color.MAGENTA);
             holder.chat.setTextColor(Color.WHITE);
 
+        }
+        else if(messages.get(position).getSend_by().equals("-1"))
+        {
+            holder.chat.setBackgroundColor(Color.WHITE);
         }
 
     }
