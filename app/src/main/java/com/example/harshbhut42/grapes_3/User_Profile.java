@@ -52,7 +52,12 @@ public class User_Profile extends AppCompatActivity {
 
             Picasso.get().load(ProfilePic).into(mImage);
             mUserName.setText(UserName);
+            if(mCurrentUser.getUid().equals(Uid))
+            {
+                mAddFriend.setEnabled(false);
+            }
         }
+
 
         mDatabase.child(mCurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

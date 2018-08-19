@@ -83,24 +83,28 @@ public class ChatsFragment extends Fragment {
             protected void populateViewHolder(final FriendViewHolder friendsViewHolder, AllFriends friends, int i) {
 
 
-                final String list_user_id = getRef(i).getKey();
+                final String user_id = getRef(i).getKey();
 
-                mDatabase_user.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                mDatabase_user.child(user_id).addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         final String userName = Objects.requireNonNull(dataSnapshot.child("name").getValue()).toString();
-                        String userThumb = Objects.requireNonNull(dataSnapshot.child("image").getValue()).toString();
+                        final String userImage = Objects.requireNonNull(dataSnapshot.child("image").getValue()).toString();
 
 
                         friendsViewHolder.setUserName(userName);
-                        friendsViewHolder.setProfilePic(userThumb);
+                        friendsViewHolder.setProfilePic(userImage);
 
                         friendsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                
+                                Intent chatIntent = new Intent(getContext(),Chats.class);
+                                chatIntent.putExtra("friend_name",userName);
+                                chatIntent.putExtra("friend_image",userImage);
+                                chatIntent.putExtra("friend_id",user_id);
+                                getContext().startActivity(chatIntent);
                             }
                         });
 
