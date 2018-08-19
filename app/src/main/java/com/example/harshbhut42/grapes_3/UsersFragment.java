@@ -99,14 +99,14 @@ public class UsersFragment extends Fragment {
 
        private static CircleImageView Image;
        private static TextView userName;
-        private static View mView2;
+        protected static View mView2;
         RelativeLayout parentLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView2 = itemView;
 
-            Image = itemView.findViewById(R.id.user_profil_pic);
+            Image = (CircleImageView) itemView.findViewById(R.id.user_profil_pic);
             userName = (TextView) itemView.findViewById(R.id.user_name);
 
             parentLayout = itemView.findViewById(R.id.singal_user_layout);
